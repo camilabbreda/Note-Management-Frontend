@@ -2,20 +2,20 @@ import axios, { AxiosInstance } from 'axios';
 
 class Webserver {
   private _token: string | undefined;
-  public notasManagementApi: AxiosInstance;
+  public notesManagementApi: AxiosInstance;
 
   constructor() {
-    this.notasManagementApi = this.instanciaNotasManagementApi();
+    this.notesManagementApi = this.noteManagementInstace();
   }
 
   public set token(token: string) {
     this._token = token;
-    this.notasManagementApi = this.instanciaNotasManagementApi();
+    this.notesManagementApi = this.noteManagementInstace();
   }
 
-  private instanciaNotasManagementApi() {
+  private noteManagementInstace() {
     const axiosInstance = axios.create({
-      baseURL: process.env.NOTES_MANAGEMENT_BACKEND,
+      baseURL: process.env.NOTES_MANAGEMENT_BACKEND_URL,
       headers: {
         'Content-Type': 'application/json',
       },

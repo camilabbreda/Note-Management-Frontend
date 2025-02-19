@@ -172,7 +172,7 @@ const NotesList = () => {
             <Button
               onClick={editingNote?._id ? handleUpdateNote : handleAddNote}
               variant="contained"
-              sx={{ width: '130px', fontSize: '12px' }}
+              sx={{ width: '160px', fontSize: '12px' }}
               startIcon={<Add />}
             >
               {editingNote?._id ? 'Save Changes' : 'Add Note'}
@@ -211,7 +211,7 @@ const NotesList = () => {
             ))
           ) : (
             <Typography sx={{ width: '100%' }} variant="h6">
-              Any note has been add yet...
+              No notes have been added yet...
             </Typography>
           )}
         </Box>

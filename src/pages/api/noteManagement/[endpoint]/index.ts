@@ -16,25 +16,25 @@ export default async function noteManagementWebserver(
 
     switch (method) {
       case 'GET':
-        response = await webserver.notasManagementApi.get(
+        response = await webserver.notesManagementApi.get(
           `/${endpoint}${route ?? ''}`,
           { params: req.query }
         );
         break;
       case 'POST':
-        response = await webserver.notasManagementApi.post(
+        response = await webserver.notesManagementApi.post(
           `/${endpoint}${route ?? ''}`,
           req.body
         );
         break;
       case 'PUT':
-        response = await webserver.notasManagementApi.put(
+        response = await webserver.notesManagementApi.put(
           `/${endpoint}${route ?? ''}`,
           req.body
         );
         break;
       case 'DELETE':
-        response = await webserver.notasManagementApi.delete(
+        response = await webserver.notesManagementApi.delete(
           `/${endpoint}${route ?? ''}`
         );
 

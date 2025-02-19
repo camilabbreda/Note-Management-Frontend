@@ -34,7 +34,10 @@ export default function AuthProvider({
   useEffect(() => {
     if (token) {
       setIsAuthenticated(true);
+      router.push('/notes');
     } else {
+      if (router.pathname === '/register' || router.pathname === '/login')
+        return;
       const cookiesToken = Cookies.get('token');
       if (cookiesToken) {
         const decode = jwt.decode(cookiesToken) as jwt.JwtPayload;
@@ -108,6 +111,7 @@ export default function AuthProvider({
   const logout = () => {
     setIsAuthenticated(false);
     setToken('');
+    Cookies.remove('token', { path: '/' });
     router.push('/login');
   };
 

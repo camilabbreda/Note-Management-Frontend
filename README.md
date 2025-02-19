@@ -1,151 +1,123 @@
-# Notes Management App
+# Notes Management Frontend
 
-## Overview
+This is a **Notes Management App** built using **Next.js, React, and TypeScript**. It features **user authentication**, **AI-powered note titles** and **create, read, update, delete notes**.
 
-The Notes Management App is a Next.js-based application that allows users to create, update, delete, and retrieve notes. It also features user authentication and AI-generated note titles.
+> **💻 This project has a back-end 💻**
+>
+> https://github.com/camilabbreda/Note-Management-Backend
 
-## Features
+# Table of Contents
 
-- User authentication (register, login)
-- Create, read, update, and delete notes
-- AI-powered title generation for notes
-- Context API for state management
-- API routes for backend logic
-- Styled components for UI
+- [Notes Management App](#notes-management-app)
+- [📌 Features](#-features)
+- [🏗 Project Structure](#-project-structure)
+- [🚀 Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+    - [Clone the repo](#clone-the-repo)
+    - [Install dependencies](#install-dependencies)
+  - [Environment Variables](#environment-variables)
+- [🔥 Running the Application](#-running-the-application)
+  - [Development Mode](#development-mode)
+- [📜 License](#-license)
 
-## Tech Stack
+## 📌 Features
 
-- **Frontend**: Next.js, React, TypeScript
-- **State Management**: React Context API
-- **Styling**: CSS Modules
-- **API Communication**: Axios
-- **Backend**: API routes within Next.js
-- **AI Integration**: AI-generated note titles
-- **Database**: PostgreSQL with Prisma ORM
+- 🔑 **User authentication** - Register, Login
+- 📝 **CRUD operations** - Create, Read, Update, Delete notes
+- ✨ **AI-powered note title generation** ✨[experimental]
+- 🎨 **Styled Components** - Modern UI with CSS Modules
+- 🔄 **API routes** - Backend logic within Next.js
+- 🗄️ **State Management** - React Context API
 
-## Folder Structure
+## 🏗 Project Structure
 
 ```
-├── .env
-├── .gitignore
-├── eslint.config.mjs
-├── next-env.d.ts
-├── next.config.ts
-├── package.json
-├── tsconfig.json
-├── public/
-│   ├── favicon.ico
-├── src/
-│   ├── api/
-│   │   ├── auth/
-│   │   │   ├── auth-api.ts
-│   │   │   ├── notes-api.ts
-│   ├── components/
-│   │   ├── Notes/
-│   │   │   ├── notes-list.tsx
-│   ├── constants/
-│   │   ├── reset-states.ts
-│   ├── context/
-│   │   ├── auth-context.tsx
-│   │   ├── notes-context.tsx
-│   ├── pages/
-│   │   ├── index.tsx
-│   │   ├── _app.tsx
-│   │   ├── api/noteManagement/[endpoint]/index.ts
-│   │   ├── login/index.tsx
-│   │   ├── notes/index.tsx
-│   │   ├── register/index.tsx
-│   ├── server/
-│   │   ├── web-servers.ts
-│   ├── styles/
-│   │   ├── globals.css
-│   │   ├── login/login.module.css
-│   │   ├── notes/notes-list.module.css
-│   │   ├── register/register.module.css
-│   ├── types/
-│   │   ├── iNote.ts
-│   │   ├── iUser.ts
-│   ├── utils/
-│   │   ├── pi
+📂src/
+├── 📂api/               # API routes for authentication and  notes
+│   ├── auth/
+│   │   ├── auth-api.ts
+│   │   ├── notes-api.ts
+│
+├── 📂components/        # UI components
+│   ├── Notes/
+│   │   ├── notes-list.tsx
+│
+├── 📂context/          # Context API for state management
+│   ├── auth-context.tsx
+│   ├── notes-context.tsx
+│
+├── 📂pages/            # Next.js pages
+│   ├── index.tsx
+│   ├── _app.tsx
+│   ├── login/index.tsx
+│   ├── notes/index.tsx
+│   ├── register/index.tsx
+│
+├── 📂styles/           # Global and module CSS
+│   ├── globals.css
+│   ├── login/login.module.css
+│   ├── notes/notes-list.module.css
+│   ├── register/register.module.css
+│
+├── 📂types/            # TypeScript interfaces
+│   ├── iNote.ts
+│   ├── iUser.ts
 ```
 
-## API Endpoints
-
-### Notes Management
-
-- **Create Note**: `POST /api/noteManagement/note`
-- **Get All Notes**: `GET /api/noteManagement/note?route=/user/{userId}`
-- **Update Note**: `PUT /api/noteManagement/note?route=/{id}`
-- **Delete Note**: `DELETE /api/noteManagement/note?route=/{id}`
-- **Generate Note Title**: `POST /api/noteManagement/generate?route=/note-title`
-
-### User Authentication
-
-- **Register User**: `POST /api/noteManagement/user?route=/register`
-- **Login User**: `POST /api/noteManagement/user?route=/login`
-
-## Database Setup
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- PostgreSQL installed
-- Prisma ORM setup
+Ensure you have the following installed:
 
-### Steps
+- [Node.js](https://nodejs.org/) (v22+ recommended)
 
-1. Install Prisma:
-   ```sh
-   npm install @prisma/client
-   ```
-2. Initialize Prisma:
-   ```sh
-   npx prisma init
-   ```
-3. Configure `.env` file:
-   ```env
-   DATABASE_URL='postgresql://user:password@localhost:5432/notesdb'
-   ```
-4. Apply migrations:
-   ```sh
-   npx prisma migrate dev --name init
-   ```
+### Installation
 
-## Setup and Installation
+#### Clone the repo
 
-### Prerequisites
+```sh
+git clone https://github.com/camilabbreda/Note-Management-Frontend.git
+cd notes-management-app
+```
 
-- Node.js (latest LTS version)
-- npm or yarn
+#### Install dependencies
 
-### Steps
+```sh
+npm install
+```
 
-1. Clone the repository:
-   ```sh
-   git clone <repository-url>
-   ```
-2. Navigate to the project folder:
-   ```sh
-   cd notes-management-app
-   ```
-3. Install dependencies:
-   ```sh
-   npm install
-   ```
-4. Set up environment variables in `.env` file.
-5. Run database migrations:
-   ```sh
-   npx prisma migrate dev
-   ```
-6. Start the development server:
-   ```sh
-   npm run dev
-   ```
-7. Open [http://localhost:3000](http://localhost:3000) in your browser.
+### Environment Variables
 
-## Contribution
+Create a `.env` file in the root directory and add:
 
-Feel free to contribute by submitting issues or pull requests.
+```env
+NOTES_MANAGEMENT_BACKEND_URL = 'http://localhost:4000'
+ENVIRONMENT = 'PRD'
+JWT_SECRET= 'JWT_SECRET_KEY'
+```
 
-## License
+## 🔥 Running the Application
+
+### Development Mode
+
+```sh
+npm run dev
+```
+
+Access the app at [http://localhost:3000](http://localhost:3000).
+
+### Production Mode
+
+```sh
+npm run build
+
+npm run start
+```
+
+ENJOY THE APP!
+
+## 📜 License
 
 This project is licensed under the MIT License.
