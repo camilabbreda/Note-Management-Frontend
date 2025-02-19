@@ -3,6 +3,7 @@ import { iNote } from '@/types/iNote';
 import { iUser } from '@/types/iUser';
 import registerNoteRequest, {
   deleteNoteRequest,
+  generateTitleRequest,
   getAllNotesRequest,
   updateNoteRequest,
 } from '@/api/auth/notes-api';
@@ -13,7 +14,9 @@ interface NotesContextType {
   addNote: (note: iNote) => void;
   editNote: (id: string, note: iNote) => void;
   deleteNote: (id: string) => void;
+  generateTitle: (content: string) => Promise<string | null>;
   notes: iNote[];
+  isLoading: boolean;
 }
 
 interface Props {
@@ -26,6 +29,7 @@ const NotesContext = createContext<NotesContextType | null>(null);
 
 export default function NotesProvider({ user, token, children }: Props) {
   const [notes, setNotes] = useState<iNote[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -158,8 +162,32 @@ export default function NotesProvider({ user, token, children }: Props) {
     }
   };
 
+  const generateTitle = async (content: string) => {
+    setIsLoading(true);
+    const response = await generateTitleRequest(content);
+
+    setIsLoading(false);
+    const { success, message } = response;
+    if (success) {
+      return message;
+    } else {
+      Swal.fire({
+        title: 'Error!',
+        text:
+          typeof message === 'string'
+            ? message
+            : 'Error on generating title, try again later!',
+        icon: 'error',
+        confirmButtonText: 'Try again!',
+      });
+      return null;
+    }
+  };
+
   return (
-    <NotesContext.Provider value={{ addNote, editNote, deleteNote, notes }}>
+    <NotesContext.Provider
+      value={{ addNote, editNote, deleteNote, notes, isLoading, generateTitle }}
+    >
       {children}
     </NotesContext.Provider>
   );

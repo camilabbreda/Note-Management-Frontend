@@ -77,8 +77,8 @@ export default function AuthProvider({
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
     setIsAuthenticated(false);
+    setToken('');
     router.push('/login');
   };
 

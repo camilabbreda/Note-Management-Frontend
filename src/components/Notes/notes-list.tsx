@@ -1,15 +1,25 @@
-import style from '../../styles/notes/notesList.module.css';
-import { Button, Box, Typography, IconButton, TextField } from '@mui/material';
-import { Edit, Delete, Add } from '@mui/icons-material';
+import style from '../../styles/notes/notes-list.module.css';
+import {
+  Button,
+  Box,
+  Typography,
+  IconButton,
+  TextField,
+  CircularProgress,
+} from '@mui/material';
+import { Edit, Delete, Add, Logout, AutoAwesome } from '@mui/icons-material';
 import { useNotes } from '@/context/notes-context';
 import { iNote } from '@/types/iNote';
 import { useState, useEffect } from 'react';
 import { INITIAL_NOTE_STATE } from '@/constants/reset-states';
 import Swal from 'sweetalert2';
+import { useAuth } from '@/context/auth-context';
 
 const NotesList = () => {
-  const { notes, addNote, editNote, deleteNote } = useNotes();
-  const [newNote, setNewNote] = useState<iNote>({ title: '', content: '' });
+  const { notes, addNote, editNote, deleteNote, isLoading, generateTitle } =
+    useNotes();
+  const { logout } = useAuth();
+  const [newNote, setNewNote] = useState<iNote>(INITIAL_NOTE_STATE);
   const [editingNote, setEditingNote] = useState<iNote | null>(
     INITIAL_NOTE_STATE
   );
@@ -52,11 +62,43 @@ const NotesList = () => {
     deleteNote(id);
   };
 
+  const handleGenerateTitle = async () => {
+    if (newNote.content) {
+      const title = await generateTitle(newNote.content);
+      setNewNote((prev) => ({ ...prev, title: title ?? prev.title }));
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <section className={style.container}>
       <Box
         sx={{
           display: 'flex',
+          justifyContent: 'flex-end ',
+          padding: 2,
+          width: '95%',
+          margin: 0,
+          border: 0,
+          justifySelf: 'right',
+        }}
+      >
+        <Button
+          onClick={handleLogout}
+          variant="contained"
+          color="secondary"
+          startIcon={<Logout />}
+        >
+          Logout
+        </Button>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          width: '90%',
           padding: 2,
           background: 'white',
           flexDirection: { xs: 'column', sm: 'row' },
@@ -84,13 +126,46 @@ const NotesList = () => {
             rows={4}
             sx={{ marginBottom: 2 }}
           />
-          <Button
-            onClick={editingNote?._id ? handleUpdateNote : handleAddNote}
-            variant="contained"
-            startIcon={<Add />}
+          <Box
+            sx={{
+              flex: 1,
+              flexDirection: 'row',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
           >
-            {editingNote?._id ? 'Save Changes' : 'Add Note'}
-          </Button>
+            <Button
+              sx={{
+                width: '170px',
+                fontSize: '12px',
+                background: 'linear-gradient(to right, purple, #1976d2)',
+                color: 'white',
+                '&:hover': {
+                  background: 'linear-gradient(to right, #1976d2, purple)',
+                },
+              }}
+              onClick={handleGenerateTitle}
+              variant="contained"
+              startIcon={
+                isLoading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <AutoAwesome />
+                )
+              }
+              disabled={isLoading}
+            >
+              Generate Title
+            </Button>
+            <Button
+              onClick={editingNote?._id ? handleUpdateNote : handleAddNote}
+              variant="contained"
+              sx={{ width: '130px', fontSize: '12px' }}
+              startIcon={<Add />}
+            >
+              {editingNote?._id ? 'Save Changes' : 'Add Note'}
+            </Button>
+          </Box>
         </Box>
 
         <Box sx={{ flex: '0 0 65%', padding: 3, minWidth: '100px' }}>
