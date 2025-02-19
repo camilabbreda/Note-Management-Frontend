@@ -66,6 +66,12 @@ const NotesList = () => {
     if (newNote.content) {
       const title = await generateTitle(newNote.content);
       setNewNote((prev) => ({ ...prev, title: title ?? prev.title }));
+    } else {
+      Swal.fire({
+        text: 'Please, fill content to generate title .',
+        icon: 'warning',
+        confirmButtonText: 'Ok!',
+      });
     }
   };
 
@@ -142,6 +148,7 @@ const NotesList = () => {
                 color: 'white',
                 '&:hover': {
                   background: 'linear-gradient(to right, #1976d2, purple)',
+                  color: 'white',
                 },
               }}
               onClick={handleGenerateTitle}
@@ -155,8 +162,9 @@ const NotesList = () => {
               }
               disabled={isLoading}
             >
-              Generate Title
+              {isLoading ? 'Generating' : 'Generate Title'}
             </Button>
+
             <Button
               onClick={editingNote?._id ? handleUpdateNote : handleAddNote}
               variant="contained"

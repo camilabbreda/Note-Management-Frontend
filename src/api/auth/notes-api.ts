@@ -91,11 +91,15 @@ export async function updateNoteRequest(id: string, note: iNote) {
 
 export async function generateTitleRequest(content: string) {
   try {
-    const response = await axios.post('/api/noteManagement/generate', content, {
-      params: {
-        route: `/note-title`,
-      },
-    });
+    const response = await axios.post(
+      '/api/noteManagement/generate',
+      { content },
+      {
+        params: {
+          route: `/note-title`,
+        },
+      }
+    );
     return response?.data;
   } catch (error) {
     return (
