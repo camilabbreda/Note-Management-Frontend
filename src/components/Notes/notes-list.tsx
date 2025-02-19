@@ -155,7 +155,11 @@ const NotesList = () => {
               variant="contained"
               startIcon={
                 isLoading ? (
-                  <CircularProgress size={20} color="inherit" />
+                  <CircularProgress
+                    size={20}
+                    sx={{ color: 'white' }}
+                    color="inherit"
+                  />
                 ) : (
                   <AutoAwesome />
                 )

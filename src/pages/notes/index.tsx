@@ -7,7 +7,7 @@ const NotesPage = () => {
   const { token, user } = useAuth();
   return (
     <NotesProvider token={token} user={user}>
-      {token ? <NotesList /> : 'Redirecting...'}
+      {token ? <NotesList /> : 'Loading...'}
     </NotesProvider>
   );
 };

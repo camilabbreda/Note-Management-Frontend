@@ -1,8 +1,12 @@
+'use server';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { iUser } from '@/types/iUser';
+import Cookies from 'js-cookie';
+import jwt from 'jsonwebtoken';
 import Swal from 'sweetalert2';
 import registerRequest, { loginRequest } from '@/api/auth/auth-api';
+import webserver from '@/server/web-servers';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -12,6 +16,7 @@ interface AuthContextType {
   user: iUser;
   setUser: (user: iUser) => void;
   token: string;
+  setToken: (token: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -27,17 +32,41 @@ export default function AuthProvider({
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) setIsAuthenticated(true);
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      const cookiesToken = Cookies.get('token');
+      if (cookiesToken) {
+        const decode = jwt.decode(cookiesToken) as jwt.JwtPayload;
+        const userToken = decode?.data as iUser;
+        if (userToken && userToken._id) {
+          console.log('setei token');
+          webserver.token = cookiesToken;
+          setToken(cookiesToken);
+          setUser(userToken);
+        } else {
+          Cookies.remove('token', { path: '/' });
+          router.push('/login');
+        }
+      } else {
+        router.push('/login');
+      }
+    }
   }, []);
 
   const login = async (email: string, password: string) => {
     const response = await loginRequest(email, password);
     const { success, message } = response;
-    if (success) {
+    if (success && message?.token) {
       setIsAuthenticated(true);
-      setToken(message?.token);
-      setUser(message?.user);
+      setToken(message.token);
+      setUser(message.user);
+      Cookies.set('token', message.token, {
+        expires: 1,
+        path: '/',
+        secure: process.env.ENVIRONMENT === 'PRD',
+        sameSite: 'Strict',
+      });
       router.push('/notes');
     } else {
       Swal.fire({
@@ -84,7 +113,16 @@ export default function AuthProvider({
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, register, token, user, setUser }}
+      value={{
+        isAuthenticated,
+        login,
+        logout,
+        register,
+        token,
+        user,
+        setUser,
+        setToken,
+      }}
     >
       {children}
     </AuthContext.Provider>

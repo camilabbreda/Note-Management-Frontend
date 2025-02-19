@@ -8,7 +8,6 @@ import registerNoteRequest, {
   updateNoteRequest,
 } from '@/api/auth/notes-api';
 import Swal from 'sweetalert2';
-import { useRouter } from 'next/router';
 
 interface NotesContextType {
   addNote: (note: iNote) => void;
@@ -30,22 +29,18 @@ const NotesContext = createContext<NotesContextType | null>(null);
 export default function NotesProvider({ user, token, children }: Props) {
   const [notes, setNotes] = useState<iNote[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
 
   useEffect(() => {
-    if (user && user._id) {
+    if (user && user._id && token) {
       (async () => {
         await getAllNotes();
       })();
-    }
-    if (!token) {
-      router.push('/login');
     }
   }, [user, token]);
 
   const getAllNotes = async () => {
     if (user?.notes?.length === 0) return;
-    const response = await getAllNotesRequest(user);
+    const response = await getAllNotesRequest(user, token);
     const { success, message } = response;
 
     if (success) {
@@ -65,7 +60,7 @@ export default function NotesProvider({ user, token, children }: Props) {
 
   const addNote = async (note: iNote) => {
     note = { ...note, userId: user?._id };
-    const response = await registerNoteRequest(note);
+    const response = await registerNoteRequest(note, token);
     const { success, message } = response;
 
     if (success) {
@@ -100,7 +95,7 @@ export default function NotesProvider({ user, token, children }: Props) {
     });
 
     if (confirm.isDenied) return;
-    const response = await updateNoteRequest(id, updatedNote);
+    const response = await updateNoteRequest(id, updatedNote, token);
     const { success, message } = response;
 
     if (success) {
@@ -138,7 +133,7 @@ export default function NotesProvider({ user, token, children }: Props) {
     });
 
     if (confirm.isDenied) return;
-    const response = await deleteNoteRequest(id);
+    const response = await deleteNoteRequest(id, token);
     const { success, message } = response;
 
     if (success) {
@@ -164,12 +159,11 @@ export default function NotesProvider({ user, token, children }: Props) {
 
   const generateTitle = async (content: string) => {
     setIsLoading(true);
-    const response = await generateTitleRequest(content);
-
+    const response = await generateTitleRequest(content, token);
     setIsLoading(false);
     const { success, message } = response;
     if (success) {
-      return message;
+      return message?.title;
     } else {
       Swal.fire({
         title: 'Error!',

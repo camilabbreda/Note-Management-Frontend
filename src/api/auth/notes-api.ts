@@ -2,9 +2,13 @@ import { iNote } from '@/types/iNote';
 import { iUser } from '@/types/iUser';
 import axios, { AxiosError } from 'axios';
 
-export default async function registerNoteRequest(note: iNote) {
+export default async function registerNoteRequest(note: iNote, token: string) {
   try {
-    const response = await axios.post('/api/noteManagement/note', note);
+    const response = await axios.post('/api/noteManagement/note', note, {
+      params: {
+        token,
+      },
+    });
     return response.data;
   } catch (error) {
     return (
@@ -20,12 +24,12 @@ export default async function registerNoteRequest(note: iNote) {
     );
   }
 }
-
-export async function getAllNotesRequest(user: iUser) {
+export async function getAllNotesRequest(user: iUser, token: string) {
   try {
     const response = await axios.get('/api/noteManagement/note', {
       params: {
         route: `/user/${user._id}`,
+        token,
       },
     });
     return response.data;
@@ -43,12 +47,12 @@ export async function getAllNotesRequest(user: iUser) {
     );
   }
 }
-
-export async function deleteNoteRequest(id: string) {
+export async function deleteNoteRequest(id: string, token: string) {
   try {
     const response = await axios.delete('/api/noteManagement/note', {
       params: {
         route: `/${id}`,
+        token,
       },
     });
     return response.data;
@@ -66,11 +70,16 @@ export async function deleteNoteRequest(id: string) {
     );
   }
 }
-export async function updateNoteRequest(id: string, note: iNote) {
+export async function updateNoteRequest(
+  id: string,
+  note: iNote,
+  token: string
+) {
   try {
     const response = await axios.put('/api/noteManagement/note', note, {
       params: {
         route: `/${id}`,
+        token,
       },
     });
     return response?.data;
@@ -88,8 +97,7 @@ export async function updateNoteRequest(id: string, note: iNote) {
     );
   }
 }
-
-export async function generateTitleRequest(content: string) {
+export async function generateTitleRequest(content: string, token: string) {
   try {
     const response = await axios.post(
       '/api/noteManagement/generate',
@@ -97,6 +105,7 @@ export async function generateTitleRequest(content: string) {
       {
         params: {
           route: `/note-title`,
+          token,
         },
       }
     );

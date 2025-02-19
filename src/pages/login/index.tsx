@@ -52,7 +52,7 @@ export default function Login() {
         </Button>
         <Box textAlign="center">
           <Link href="/register" variant="body2">
-            Don't have an account? Register
+            Don&apos;t have an account? Register
           </Link>
         </Box>
       </Container>
